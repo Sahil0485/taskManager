@@ -76,7 +76,9 @@ function TaskList() {
       notify("Connection Fail", "error");
     }
   };
-  const handleUpdateTask = (item) => {};
+  const handleUpdateTask = (item) => {
+    <EditTask />;
+  };
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     const oldTasks = [...copyTasks];
@@ -85,10 +87,16 @@ function TaskList() {
     );
     setTasks(results);
   };
+  const handleFilter = (filter) => {
+    const status = filter == "complete" ? true : false;
+    const oldTasks = [...copyTasks];
+    const results = oldTasks.filter((item) => item.isDone == status);
+    setTasks(results);
+  };
 
   return (
     <div>
-      <div>
+      <div className="d-flex">
         <div className="d-flex input-group flex-grow-1 me-4">
           <input
             type="text"
@@ -100,10 +108,27 @@ function TaskList() {
             <FaSearch />
           </span>
         </div>
+        <div className="d-flex">
+          <button
+            className="border m-1 btn btn-info"
+            onClick={() => handleFilter("complete")}
+          >
+            Complete
+          </button>
+          <button
+            className="border m-1 btn btn-info"
+            onClick={() => handleFilter("pending")}
+          >
+            Pending
+          </button>
+        </div>
       </div>
       <div className="d-flex flex-column">
         {tasks.map((item) => (
-          <div className="m-2 p-2 border bg-light w-100 rounded-3 d-flex justify-content-between align-items-center">
+          <div
+            className="m-2 p-2 border bg-light w-100 rounded-3 d-flex justify-content-between align-items-center"
+            key={item._id}
+          >
             <div>
               <h4 className={item.isDone ? "text-decoration-line-through" : ""}>
                 {item.taskName}
